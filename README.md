@@ -21,6 +21,8 @@ app2: http://app2.itshellweb.org
 
 #
 
+# Grafana read prometheus data and dashboard with status codes , response time ,etc.
+
 Grafana: http://localhost:3000 #Login with admin #user: admin #pass: test
 
 # For test metrics
