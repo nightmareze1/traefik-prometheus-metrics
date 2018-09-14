@@ -1,5 +1,6 @@
 # You need add in your /etc/host
 
+
 127.0.0.1 app1.itshellweb.org 
 
 127.0.0.1 app2.itshellweb.org
