@@ -11,8 +11,9 @@ docker-compose up --build
 # Check works urls:
 prometheus: http://localhost:9090/
 
-traefik: http://localhost:8085/
-
+traefik: http://localhost:8085/     #user: admin 
+                                    #pass: testing
+                                    
 app1: http://app1.itshellweb.org
 
 app2: http://app2.itshellweb.org
