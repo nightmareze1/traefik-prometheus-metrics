@@ -17,6 +17,14 @@ app1: http://app1.itshellweb.org
 
 app2: http://app2.itshellweb.org
 
+# For test metrics
+
+traefik: http://localhost:8085/metrics
+
+or
+
+View metrics in prometheus using dashboard and querys.
+
 # Stop Stack:
 
 docker-compose down
