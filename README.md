@@ -19,6 +19,10 @@ app1: http://app1.itshellweb.org
 
 app2: http://app2.itshellweb.org
 
+#
+
+Grafana: http://localhost:3000 #Login with admin #user: admin #pass: test
+
 # For test metrics
 
 traefik: http://localhost:8085/metrics
