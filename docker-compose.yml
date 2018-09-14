@@ -1,0 +1,64 @@
+version: '3'
+
+services:
+  traefik:
+    image: traefik:latest
+    container_name: traefik
+    restart: always
+    command: --api --api.statistics --docker
+    ports:
+      - 80:80
+      - 443:443
+      - 8085:8080
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./traefik.toml:/etc/traefik/traefik.toml
+    networks:
+     traefik:
+       ipv4_address: 172.40.0.10
+
+  prometheus:
+    build:
+      context: ./prometheus
+      dockerfile: Dockerfile
+    volumes:
+     - ./config/prometheus.yml:/etc/prometheus/prometheus.yml
+    command: "--config.file=/etc/prometheus/prometheus.yml --storage.tsdb.path=/prometheus"
+    links:
+    - traefik
+    networks:
+     traefik:
+       ipv4_address: 172.40.0.90
+    ports:
+     - 9090:9090
+
+  app1:
+      hostname: app1
+      image: nightmareze1/nginx:v0.0.19
+      labels:
+        traefik.backend: 'app-1'
+        traefik.frontend.rule: 'Host: app1.itshellweb.org'
+        traefik.enable: 'true'
+        traefik.port: '80'
+      networks:
+       traefik:
+        ipv4_address: 172.40.0.20
+
+  app2:
+      hostname: app2
+      image: nightmareze1/nginx:v0.0.272
+      labels:
+        traefik.backend: 'app-2'
+        traefik.frontend.rule: 'Host: app2.itshellweb.org'
+        traefik.enable: 'true'
+        traefik.port: '80'
+      networks:
+       traefik:
+        ipv4_address: 172.40.0.21
+
+networks:
+ traefik:
+  driver: bridge
+  ipam:
+    config:
+    - subnet: 172.40.0.0/24
