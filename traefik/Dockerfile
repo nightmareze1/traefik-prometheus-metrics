@@ -1,4 +1,4 @@
-FROM traefik:v1.6.5-alpine
+FROM traefik:v1.7.30-alpine
 EXPOSE 8080 80
 COPY traefik.toml /etc/traefik/traefik.toml
 
