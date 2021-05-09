@@ -50,7 +50,7 @@ services:
 
   app1:
       hostname: app1
-      image: nightmareze1/nginx:v0.0.19
+      image: nightmareze1/nginx:v0.0.272
       labels:
         traefik.backend: 'app-1'
         traefik.frontend.rule: 'Host: app1.itshellweb.org'
