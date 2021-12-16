@@ -5,14 +5,13 @@ services:
     image: traefik:latest
     container_name: traefik
     restart: always
-    command: --api --api.statistics --docker
     ports:
       - 80:80
       - 443:443
-      - 8085:8080
+      - 8080:8080
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - ./traefik.toml:/etc/traefik/traefik.toml
+      - ./traefik/traefik.yml:/etc/traefik/traefik.yml
     networks:
      traefik:
        ipv4_address: 172.40.0.10
@@ -52,10 +51,9 @@ services:
       hostname: app1
       image: nightmareze1/nginx:v0.0.19
       labels:
-        traefik.backend: 'app-1'
-        traefik.frontend.rule: 'Host: app1.itshellweb.org'
-        traefik.enable: 'true'
-        traefik.port: '80'
+      - "traefik.enable=true"
+      - "traefik.http.routers.app1.rule=Host(`app1.com`)"
+      - "traefik.http.routers.app1.entrypoints=web"
       networks:
        traefik:
         ipv4_address: 172.40.0.20
@@ -64,10 +62,9 @@ services:
       hostname: app2
       image: nightmareze1/nginx:v0.0.272
       labels:
-        traefik.backend: 'app-2'
-        traefik.frontend.rule: 'Host: app2.itshellweb.org'
-        traefik.enable: 'true'
-        traefik.port: '80'
+      - "traefik.enable=true"
+      - "traefik.http.routers.app2.rule=Host(`app2.com`)"
+      - "traefik.http.routers.app2.entrypoints=web"
       networks:
        traefik:
         ipv4_address: 172.40.0.21
