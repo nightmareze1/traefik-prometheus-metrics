@@ -24,6 +24,10 @@ metrics:
       - 1.2
       - 5.0
 
+tracing:
+  zipkin:
+    httpEndpoint: http://172.40.0.38:9411/api/v2/spans
+
 api:
   dashboard: true
   insecure: true

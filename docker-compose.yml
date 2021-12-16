@@ -47,6 +47,20 @@ services:
     ports:
      - 3000:3000
 
+
+  zipkin:
+    image: ghcr.io/openzipkin/zipkin-slim:latest
+    container_name: zipkin
+    environment:
+      - STORAGE_TYPE=mem
+      - MYSQL_HOST=mysql
+      - SELF_TRACING_ENABLED=true
+    networks:
+     traefik:
+       ipv4_address: 172.40.0.38
+    ports:
+      - 9411:9411
+
   app1:
       hostname: app1
       image: nightmareze1/nginx:v0.0.19
