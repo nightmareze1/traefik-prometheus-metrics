@@ -1,0 +1,24 @@
+version: '3'
+
+services:
+  traefik:
+    image: traefik:v2.5
+    command:
+      - "--providers.docker"
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.websecure.address=:443"
+      - "--entrypoints.tcp.address=:3030"
+    ports:
+      - "80:80"
+      - "443:443"
+      - "3030:3030"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+
+  multiprotocol:
+    image: nightmareze1/multiprotocol-docker
+    labels:
+        - traefik.tcp.routers.tcp.rule=HostSNI(`*`)
+        - traefik.tcp.routers.tcp.entrypoints=tcp
+        - traefik.tcp.routers.tcp.service=tcp
+        - traefik.tcp.services.tcp.loadbalancer.server.port=6969

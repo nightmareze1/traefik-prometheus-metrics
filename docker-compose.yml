@@ -6,15 +6,28 @@ services:
     container_name: traefik
     restart: always
     ports:
-      - 80:80
-      - 443:443
-      - 8080:8080
+      - "80:80"
+      - "443:443"
+      - "8080:8080"
+      - "5050:3030"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - ./traefik/traefik.yml:/etc/traefik/traefik.yml
+      - ./traefik/traefik.toml:/etc/traefik/traefik.toml
     networks:
      traefik:
        ipv4_address: 172.40.0.10
+
+  multiprotocol:
+    image: nightmareze1/multiprotocol-docker
+    labels:
+        - traefik.tcp.routers.tcp.rule=HostSNI(`*`)
+        - traefik.tcp.routers.tcp.entrypoints=tcp
+        - traefik.tcp.routers.tcp.service=tcp
+        - traefik.tcp.services.tcp.loadbalancer.server.port=6969
+        - traefik.enable=true
+    networks:
+     traefik:
+       ipv4_address: 172.40.0.101
 
   prometheus:
     build:

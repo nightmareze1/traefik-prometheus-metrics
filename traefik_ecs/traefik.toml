@@ -33,17 +33,22 @@
 [ping]
 
 [log]
-  level = "DEBUG"
+  level = "INFO"
 
 [accessLog]
 
-[providers.docker]
+[providers.ecs]
+  clusters = ["test-dev"]
   exposedByDefault = false
+  autoDiscoverClusters = false
+  refreshSeconds = 10
+  region = "us-west-2"
+  accessKeyID = "asd"
+  secretAccessKey = "bcasd"
+
+[serversTransport]
+  maxIdleConnsPerHost = 3072
 
 [metrics]
   [metrics.prometheus]
     buckets = [0.1,0.3,1.2,5.0]
-
-[tracing]
-  [tracing.zipkin]
-    httpEndpoint = "http://172.40.0.38:9411/api/v2/spans"
