@@ -17,69 +17,12 @@ services:
      traefik:
        ipv4_address: 172.40.0.10
 
-  multiprotocol:
-    image: nightmareze1/multiprotocol-docker
-    labels:
-        - traefik.tcp.routers.tcp.rule=HostSNI(`*`)
-        - traefik.tcp.routers.tcp.entrypoints=tcp
-        - traefik.tcp.routers.tcp.service=tcp
-        - traefik.tcp.services.tcp.loadbalancer.server.port=6969
-        - traefik.enable=true
-    networks:
-     traefik:
-       ipv4_address: 172.40.0.101
-
-  prometheus:
-    build:
-      context: ./prometheus
-      dockerfile: Dockerfile
-    volumes:
-     - ./config/prometheus.yml:/etc/prometheus/prometheus.yml
-    command: "--config.file=/etc/prometheus/prometheus.yml --storage.tsdb.path=/prometheus"
-    links:
-    - traefik
-    networks:
-     traefik:
-       ipv4_address: 172.40.0.90
-    ports:
-     - 9090:9090
-
-  grafana:
-    image: grafana/grafana:latest
-    volumes:
-    # persistency
-    # grafana/data;sudo chown -R 472:472 grafana/data
-    - ./grafana/data:/var/lib/grafana
-    env_file:
-    - ./grafana/config.env 
-    links:
-    - prometheus
-    networks:
-     traefik:
-       ipv4_address: 172.40.0.100
-    ports:
-     - 3000:3000
-
-
-  zipkin:
-    image: ghcr.io/openzipkin/zipkin-slim:latest
-    container_name: zipkin
-    environment:
-      - STORAGE_TYPE=mem
-      - MYSQL_HOST=mysql
-      - SELF_TRACING_ENABLED=true
-    networks:
-     traefik:
-       ipv4_address: 172.40.0.38
-    ports:
-      - 9411:9411
-
   app1:
       hostname: app1
       image: nightmareze1/nginx:v0.0.19
       labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.app1.rule=Host(`app1.com`)"
+      - "traefik.http.routers.app1.rule=Host(`app1.com`) && PathPrefix(`/`)"
       - "traefik.http.routers.app1.entrypoints=web"
       networks:
        traefik:
@@ -90,7 +33,7 @@ services:
       image: nightmareze1/nginx:v0.0.272
       labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.app2.rule=Host(`app2.com`)"
+      - "traefik.http.routers.app2.rule=Host(`app1.com`) && PathPrefix(`/shop`)"
       - "traefik.http.routers.app2.entrypoints=web"
       networks:
        traefik:
