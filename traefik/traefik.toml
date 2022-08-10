@@ -7,28 +7,6 @@
     address = ":80"
   [entryPoints.websecure]
     address = ":443"
-  [entryPoints.tcp]
-    address = ":3030"
-  [entryPoints.tcp1]
-    address = ":3031"
-  [entryPoints.tcp2]
-    address = ":3032"
-  [entryPoints.tcp3]
-    address = ":3033"
-  [entryPoints.tcp4]
-    address = ":3034"
-  [entryPoints.tcp5]
-    address = ":3035"
-  [entryPoints.tcp6]
-    address = ":3036"
-  [entryPoints.tcp7]
-    address = ":3037"
-  [entryPoints.tcp8]
-    address = ":3038"
-  [entryPoints.tcp9]
-    address = ":3039"
- [entryPoints.tcp10]
-    address = ":3040"
 
 [ping]
 
@@ -37,13 +15,16 @@
 
 [accessLog]
 
-[providers.docker]
-  exposedByDefault = false
+[providers]
+  [providers.docker]
+    exposedByDefault = false
+  [providers.file]
+    filename = "/etc/traefik/traefik.toml"
 
 [metrics]
   [metrics.prometheus]
     buckets = [0.1,0.3,1.2,5.0]
 
-[tracing]
-  [tracing.zipkin]
-    httpEndpoint = "http://172.40.0.38:9411/api/v2/spans"
+[[tls.certificates]]
+  certFile = "/mtls/cert.pem"
+  keyFile = "/mtls/cert.pem"

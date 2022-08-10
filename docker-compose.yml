@@ -13,6 +13,7 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ./traefik/traefik.toml:/etc/traefik/traefik.toml
+      - ./mtls:/mtls
     networks:
      traefik:
        ipv4_address: 172.40.0.10
@@ -22,45 +23,12 @@ services:
       image: nightmareze1/nginx:v0.0.19
       labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.app1.rule=Host(`app1.com`) && PathPrefix(`/`)"
-      - "traefik.http.routers.app1.entrypoints=web"
+      - "traefik.http.routers.app1.rule=Host(`app1.treinta.co`)"
+      - "traefik.http.routers.app1.entrypoints=websecure"
+      - "traefik.http.routers.app1.tls=true"
       networks:
        traefik:
         ipv4_address: 172.40.0.20
-
-  app2:
-      hostname: app2
-      image: nightmareze1/nginx:v0.0.272
-      labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.app2.rule=Host(`app1.com`) && PathPrefix(`/shop`)"
-      - "traefik.http.routers.app2.entrypoints=web"
-      networks:
-       traefik:
-        ipv4_address: 172.40.0.21
-
-  app3:
-      hostname: app3
-      image: nightmareze1/nginx:v0.0.272
-      labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.app3.rule=Host(`app4.com`) && PathPrefix(`/shop`)"
-      - "traefik.http.routers.app3.entrypoints=web"
-      networks:
-       traefik:
-        ipv4_address: 172.40.0.22
-
-  app4:
-      hostname: app4
-      image: nightmareze1/nginx:v0.0.272
-      labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.app4.rule=Host(`app4.com`) && PathPrefix(`/`)"
-      - "traefik.http.routers.app4.entrypoints=web"
-      networks:
-       traefik:
-        ipv4_address: 172.40.0.23
-
 
 networks:
  traefik:
