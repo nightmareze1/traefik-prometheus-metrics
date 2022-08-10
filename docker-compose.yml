@@ -39,6 +39,29 @@ services:
        traefik:
         ipv4_address: 172.40.0.21
 
+  app3:
+      hostname: app3
+      image: nightmareze1/nginx:v0.0.272
+      labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.app3.rule=Host(`app4.com`) && PathPrefix(`/shop`)"
+      - "traefik.http.routers.app3.entrypoints=web"
+      networks:
+       traefik:
+        ipv4_address: 172.40.0.22
+
+  app4:
+      hostname: app4
+      image: nightmareze1/nginx:v0.0.272
+      labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.app4.rule=Host(`app4.com`) && PathPrefix(`/`)"
+      - "traefik.http.routers.app4.entrypoints=web"
+      networks:
+       traefik:
+        ipv4_address: 172.40.0.23
+
+
 networks:
  traefik:
   driver: bridge
