@@ -1,4 +1,4 @@
-version: '3'
+version: "3.7"
 
 services:
   traefik:
@@ -16,18 +16,6 @@ services:
     networks:
      traefik:
        ipv4_address: 172.40.0.10
-
-  multiprotocol:
-    image: nightmareze1/multiprotocol-docker
-    labels:
-        - traefik.tcp.routers.tcp.rule=HostSNI(`*`)
-        - traefik.tcp.routers.tcp.entrypoints=tcp
-        - traefik.tcp.routers.tcp.service=tcp
-        - traefik.tcp.services.tcp.loadbalancer.server.port=6969
-        - traefik.enable=true
-    networks:
-     traefik:
-       ipv4_address: 172.40.0.101
 
   prometheus:
     build:
@@ -85,16 +73,26 @@ services:
        traefik:
         ipv4_address: 172.40.0.20
 
-  app2:
-      hostname: app2
-      image: nightmareze1/nginx:v0.0.272
-      labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.app2.rule=Host(`app2.com`)"
-      - "traefik.http.routers.app2.entrypoints=web"
-      networks:
-       traefik:
-        ipv4_address: 172.40.0.21
+  loki:
+    image: grafana/loki:2.6.1
+    ports:
+      - "3100:3100"
+    command: -config.file=/etc/loki/local-config.yaml
+    networks:
+     traefik:
+      ipv4_address: 172.40.0.121
+
+  promtail:
+    image: grafana/promtail:2.6.1
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /var/lib/docker/containers:/var/lib/docker/containers
+      - ./loki/promtail-config.yml:/etc/promtail/config.yml
+      - /var/log:/var/log
+    command: -config.file=/etc/promtail/config.yml
+    networks:
+     traefik:
+      ipv4_address: 172.40.0.122
 
 networks:
  traefik:
